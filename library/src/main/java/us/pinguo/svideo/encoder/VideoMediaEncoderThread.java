@@ -39,15 +39,17 @@ public class VideoMediaEncoderThread extends TimeOutThread implements Thread.Unc
 
     protected int mWidth;
     protected int mHeight;
+    protected int mVideoRotation;
     protected byte[] mLastFrameYUV;
     protected long mLastFrameTime;
     private String mSdkEffectKey;
 
     // Runs in main thread
-    public VideoMediaEncoderThread(int width, int height, int bitRate, int frameRate, int iFrameInterval, String path, MediaMuxer mediaMuxer, CountDownLatch countDownLatch) {
+    public VideoMediaEncoderThread(int width, int height, int videoRotation,int bitRate, int frameRate, int iFrameInterval, String path, MediaMuxer mediaMuxer, CountDownLatch countDownLatch) {
         super(countDownLatch);
         mWidth = width;
         mHeight = height;
+        mVideoRotation = videoRotation;
         setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
         setName("VideoMediaEncoderThread");
         mQueue = new LinkedBlockingQueue<SaveRequest>();
@@ -55,6 +57,7 @@ public class VideoMediaEncoderThread extends TimeOutThread implements Thread.Unc
         initRecorder(
                 width,
                 height,
+                mVideoRotation,
                 bitRate,
                 frameRate,
                 iFrameInterval,
@@ -63,11 +66,12 @@ public class VideoMediaEncoderThread extends TimeOutThread implements Thread.Unc
         );
     }
 
-    protected void initRecorder(int width, int height, int bitRate, int frameRate, int iFrameInterval, String path, MediaMuxer mediaMuxer) {
+    protected void initRecorder(int width, int height, int videoRotation,int bitRate, int frameRate, int iFrameInterval, String path, MediaMuxer mediaMuxer) {
         if (SVideoUtil.AFTER_LOLLIPOP) {
             mRecorder = new VideoEncoderApi21(
                     width,
                     height,
+                    videoRotation,
                     bitRate,
                     frameRate,
                     iFrameInterval,
@@ -78,6 +82,7 @@ public class VideoMediaEncoderThread extends TimeOutThread implements Thread.Unc
             mRecorder = new VideoEncoderFromBuffer(
                     width,
                     height,
+                    videoRotation,
                     bitRate,
                     frameRate,
                     iFrameInterval,

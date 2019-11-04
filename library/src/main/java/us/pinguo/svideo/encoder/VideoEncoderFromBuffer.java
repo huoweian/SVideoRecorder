@@ -10,6 +10,9 @@ import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.os.Build;
+
+import com.libyuv.util.YuvUtil;
+
 import us.pinguo.svideo.recorder.SMediaCodecRecorder;
 import us.pinguo.svideo.utils.RL;
 import us.pinguo.svideo.utils.SVideoUtil;
@@ -30,6 +33,7 @@ public class VideoEncoderFromBuffer {
 
     protected int mWidth;
     protected int mHeight;
+    protected int mVideoRotation;
     protected MediaCodec mMediaCodec;
     protected MediaMuxer mMuxer;
     protected BufferInfo mBufferInfo;
@@ -52,9 +56,10 @@ public class VideoEncoderFromBuffer {
     protected int index;
 
     @SuppressLint("NewApi")
-    public VideoEncoderFromBuffer(int width, int height, int bitRate, int frameRate, int iFrameInterval, MediaMuxer mediaMuxer) {
+    public VideoEncoderFromBuffer(int width, int height, int videoRotation,int bitRate, int frameRate, int iFrameInterval, MediaMuxer mediaMuxer) {
         this.mWidth = width;
         this.mHeight = height;
+        this.mVideoRotation = videoRotation;
         mBitRate = bitRate;
         mIFrameInterval = iFrameInterval;
         mFrameRate = frameRate;
@@ -70,6 +75,13 @@ public class VideoEncoderFromBuffer {
         mFrameData = new byte[this.mWidth * this.mHeight * 3 / 2];
         MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE,
                 this.mWidth, this.mHeight);
+        if(mVideoRotation==90 || mVideoRotation==270){
+            //设置视频宽高
+            mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, this.mHeight, this.mWidth);
+            //mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, this.mWidth, this.mHeight);
+        }else{
+            mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, this.mWidth, this.mHeight);
+        }
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, mBitRate);
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate);
         mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, SVideoUtil.getSupportColorFormat());
@@ -102,8 +114,13 @@ public class VideoEncoderFromBuffer {
             inputLen = input.length;
         }
         long s = System.currentTimeMillis();
+
+//        byte[] nv12 = new byte[inputLen];
+//        YuvUtil.NV21ToNV12(input,nv12,mWidth,mHeight,inputLen);
+//        System.arraycopy(nv12, 0, mFrameData, 0, inputLen);
+
         System.arraycopy(input, 0, mFrameData, 0, inputLen);
-        SVideoUtil.convertColorFormat(mFrameData, mWidth, mHeight, inputLen, SVideoUtil.getSupportColorFormat());
+        //SVideoUtil.convertColorFormat(mFrameData, mWidth, mHeight, inputLen, SVideoUtil.getSupportColorFormat());
         long e = System.currentTimeMillis();
         RL.i("convertColorFormat耗时:" + (e - s) + "ms");
     }

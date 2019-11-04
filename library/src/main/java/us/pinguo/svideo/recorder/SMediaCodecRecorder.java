@@ -73,7 +73,7 @@ public class SMediaCodecRecorder extends SAbsVideoRecorder {
         MediaMuxer mediaMuxer = null;
         try {
             mediaMuxer = new MediaMuxer(videoFileName, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
-            mediaMuxer.setOrientationHint(videoRotation);
+            //mediaMuxer.setOrientationHint(videoRotation);
         } catch (IOException e) {
             onVideoRecordFail(e, false);
             return false;
@@ -83,6 +83,7 @@ public class SMediaCodecRecorder extends SAbsVideoRecorder {
         mRecorderThread = new VideoMediaEncoderThread(
                 previewWidth,
                 previewHeight,
+                videoRotation,
                 mVideoBitRate,
                 mFrameRate,
                 mIFrameInterval,

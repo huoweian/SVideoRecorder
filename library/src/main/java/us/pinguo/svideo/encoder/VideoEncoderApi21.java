@@ -16,8 +16,8 @@ import java.nio.ByteBuffer;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class VideoEncoderApi21 extends VideoEncoderFromBuffer {
 
-    public VideoEncoderApi21(int width, int height, int bitRate, int frameRate, int iFrameInterval, String path, MediaMuxer mediaMuxer) {
-        super(width, height, bitRate, frameRate, iFrameInterval, mediaMuxer);
+    public VideoEncoderApi21(int width, int height, int videoRotation, int bitRate, int frameRate, int iFrameInterval, String path, MediaMuxer mediaMuxer) {
+        super(width, height,videoRotation, bitRate, frameRate, iFrameInterval, mediaMuxer);
     }
 
     public void encodeFrame(byte[] input, long fpsTimeUs) {

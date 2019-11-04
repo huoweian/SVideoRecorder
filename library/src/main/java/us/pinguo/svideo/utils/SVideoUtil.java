@@ -23,6 +23,9 @@ import android.opengl.EGLSurface;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Pair;
+
+import com.libyuv.util.YuvUtil;
+
 import us.pinguo.svideo.encoder.VideoEncoderFromBuffer;
 import us.pinguo.svideo.interfaces.ICameraProxyForRecord;
 import us.pinguo.svideo.recorder.SAbsVideoRecorder;
@@ -317,6 +320,7 @@ public class SVideoUtil {
         switch (colorFormat) {
             case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar:
                 NSVUtil.NV12ToNV21(data, width, height, len);
+
                 break;
             case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar:
                 //这个函数其实是NV21转420P

@@ -22,8 +22,8 @@ public class VideoEncoderApi16 extends VideoEncoderFromBuffer {
 
     private FileChannel mFileChannel;
     @SuppressLint("NewApi")
-    public VideoEncoderApi16(int width, int height, int bitRate, int frameRate, int iFrameInterval, String path) {
-        super(width, height, bitRate, frameRate, iFrameInterval, null);
+    public VideoEncoderApi16(int width, int height,int videoRotation, int bitRate, int frameRate, int iFrameInterval, String path) {
+        super(width, height,videoRotation, bitRate, frameRate, iFrameInterval, null);
 
         File file = new File(path);
         try {
